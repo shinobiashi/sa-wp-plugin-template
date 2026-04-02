@@ -7,11 +7,24 @@ const SaaiOverviewPage = () => {
         <div className="saai-admin-layout">
             <div className="saai-admin__header">
                 <div className="saai-admin__header-wrapper">
-                    <h1>{ __( 'SAAI Overview', 'plugin-name' ) }</h1>
+                    <h1>{ __( 'SAAI Overview', 'saai-blocks' ) }</h1>
                 </div>
             </div>
-            <div className="saai-admin__content">
-                <p>{ __( 'Welcome to the SAAI admin overview page.', 'plugin-name' ) }</p>
+            <div className="saai-admin-overview__content">
+                <p>{ __( 'This plugin is developed by Shinobiashi INC., a Woo Agency.', 'saai-blocks' ) }</p>
+                { window.saaiBlocksData?.wooPartnerLogoUrl && (
+                    <a
+                        href="https://woocommerce.com/development-services/shinobiashi-inc/233150772/"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <img
+                            src={ window.saaiBlocksData.wooPartnerLogoUrl }
+                            alt={ __( 'Woo Partner Logo', 'saai-blocks' ) }
+                            className="saai-woo-partner-logo"
+                        />
+                    </a>
+                ) }
             </div>
         </div>
     );

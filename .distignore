@@ -1,0 +1,47 @@
+# Development source files
+src/
+node_modules/
+vendor/
+
+# Build config
+webpack.config.js
+package.json
+package-lock.json
+composer.json
+composer.lock
+
+# CI/CD
+.github/
+
+# Local / dev config
+.wp-env.json
+.wp-env.override.json
+.editorconfig
+.eslintrc
+.stylelintrc
+.phpcs.xml
+phpcs.xml
+phpunit.xml
+
+# VCS
+.git/
+.gitignore
+.gitattributes
+
+# Docs / meta (keep readme.txt for wp.org, exclude others)
+CLAUDE.md
+README.md
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs
+logs/
+
+# Ignore files with secrets
+.claude
+.npmrc
+.distignore
