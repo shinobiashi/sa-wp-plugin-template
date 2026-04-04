@@ -6,7 +6,7 @@
 - **Namespace**: `{Vendor}\{PluginName}` (PSR-4)
 - **Min Requirements**: PHP 8.1+, WordPress 6.4+, WooCommerce 8.0+
 - **Text Domain**: `{plugin-slug}`
-- **License**: GPL-2.0-or-later
+- **License**: GPL-3.0-or-later
 
 ## Architecture & Conventions
 
