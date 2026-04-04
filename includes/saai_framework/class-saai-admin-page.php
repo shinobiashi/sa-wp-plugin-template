@@ -8,8 +8,6 @@
 
 namespace SAAI\Admin;
 
-use Automattic\WooCommerce\Internal\Admin\Loader;
-
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -100,15 +98,23 @@ if ( ! class_exists( 'SAAI\Admin\SAAI_Admin_Page' ) ) :
 		 * @since 1.0.0
 		 */
 		public function saai_admin_overview_page_callback() {
-			Loader::page_wrapper();
+			echo '<div class="wrap"><div id="saai-overview-root"></div></div>';
 		}
 
 		/**
 		 * Register and enqueue admin scripts and styles for SAAI admin pages.
 		 *
+		 * Only enqueues assets on the saai-overview screen to avoid conflicts
+		 * with WooCommerce admin pages such as wc-admin.
+		 *
 		 * @since 1.0.0
 		 */
 		public function saai_admin_register_scripts() {
+			$screen = get_current_screen();
+			if ( ! $screen || 'toplevel_page_' . $this->menu_slug !== $screen->id ) {
+				return;
+			}
+
 			$script_path       = PLUGIN_NAME_PATH . '/assets/build/saai/admin/overview.js';
 			$script_asset_path = PLUGIN_NAME_PATH . '/assets/build/saai/admin/overview.asset.php';
 			$script_asset      = file_exists( $script_asset_path )
@@ -130,9 +136,16 @@ if ( ! class_exists( 'SAAI\Admin\SAAI_Admin_Page' ) ) :
 			wp_register_style(
 				$this->menu_slug,
 				PLUGIN_NAME_URL . '/assets/build/saai/admin/overview.css',
-				// Add any dependencies styles may have, such as wp-components.
 				array(),
 				filemtime( PLUGIN_NAME_PATH . '/assets/build/saai/admin/overview.css' )
+			);
+
+			wp_localize_script(
+				$this->menu_slug,
+				'saaiBlocksData',
+				array(
+					'wooPartnerLogoUrl' => PLUGIN_NAME_URL . 'assets/images/woo_partner_logo.png',
+				)
 			);
 
 			wp_enqueue_script( $this->menu_slug );

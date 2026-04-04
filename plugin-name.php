@@ -6,14 +6,15 @@
  * Version: 1.0.0
  * Author: Shohei Tanaka
  * Author URI: https://example.com/
- * License: GPL3
+ * License: GPL-2.0-or-later
  * Text Domain: plugin-name
  * Domain Path: /i18n
- * Requires at least: 6.7
+ * Requires at least: 6.4
  * Tested up to: 6.8.2
- * Requires PHP: 8.1
- * WC requires at least: 8.0
+ * Requires PHP: 8.2
+ * WC requires at least: 9.0
  * WC tested up to: 10.1
+ * Network: false
  *
  * @package Plugin_Name
  */
@@ -48,30 +49,26 @@ if ( is_woocommerce_active() ) {
 	if ( ! defined( 'PLUGIN_NAME_PATH' ) ) {
 		define( 'PLUGIN_NAME_PATH', __DIR__ );
 		define( 'PLUGIN_NAME_URL', plugins_url( '/', __FILE__ ) );
+		define( 'PLUGIN_NAME_VERSION', '1.0.0' );
 	}
 
-	// Load all php files in the includes directory.
-	$includes_dir = __DIR__ . '/includes';
+	// Load includes in dependency order.
+	$plugin_name_includes = array(
+		'/includes/saai_framework/class-saai-wc-user.php',
+		'/includes/saai_framework/class-saai-admin-page.php',
+		'/includes/class-plugin-name.php',
+		'/includes/admin/class-saai-admin-plugin-name.php',
+	);
 
-	try {
-		$directory_iterator = new RecursiveDirectoryIterator(
-			$includes_dir,
-			FilesystemIterator::SKIP_DOTS
-		);
-
-		$iterator = new RecursiveIteratorIterator( $directory_iterator );
-
-		foreach ( $iterator as $file_info ) {
-			if ( $file_info->getExtension() === 'php' ) {
-				require_once $file_info->getRealPath();
-			}
-		}
-	} catch ( Exception $e ) {
-		// Handle error silently in production or use WordPress admin notice.
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			wp_die( 'File load error in plugin: ' . esc_html( $e->getMessage() ) );
+	foreach ( $plugin_name_includes as $file ) {
+		$file_path = __DIR__ . $file;
+		if ( file_exists( $file_path ) ) {
+			require_once $file_path;
 		}
 	}
+
+	register_activation_hook( __FILE__, array( 'Plugin_Name', 'activate' ) );
+	register_deactivation_hook( __FILE__, array( 'Plugin_Name', 'deactivate' ) );
 
 	add_action( 'plugins_loaded', 'plugin_name_init', 10 );
 
@@ -84,4 +81,16 @@ if ( is_woocommerce_active() ) {
 		load_plugin_textdomain( 'plugin-name', false, plugin_basename( __DIR__ ) . '/i18n' );
 		Plugin_Name::instance();
 	}
+
+	/**
+	 * Declare plugin compatibility with WooCommerce HPOS.
+	 */
+	add_action(
+		'before_woocommerce_init',
+		function () {
+			if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			}
+		}
+	);
 }

@@ -58,4 +58,18 @@ class Plugin_Name {
 			new SAAI_Admin_Page( $admin_menu );
 		}
 	}
+
+	/**
+	 * Plugin activation handler.
+	 */
+	public static function activate() {
+		// Activation tasks: create tables, schedule events, etc.
+	}
+
+	/**
+	 * Plugin deactivation handler.
+	 */
+	public static function deactivate() {
+		// Deactivation tasks: clear scheduled events, etc.
+	}
 }

@@ -31,7 +31,7 @@ const SaaiOverviewPage = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    const root = document.querySelector('#root');
+    const root = document.querySelector('#saai-overview-root');
     if (root) {
         render(<SaaiOverviewPage />, root);
     }
